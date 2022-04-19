@@ -1,17 +1,65 @@
-import React from "react";
-import Header from "./header.jsx";
-import AddTask from "./Task.jsx";
+import React, { useState } from "react";
 
 const Home = () => {
+	const [input, setInput] = useState("");
+	const [list, setList] = useState([]);
+	const [hoverOn, setHoverOn] = useState(false);
+
 	return (
-		<div className="container">
-			<div
-				className="block bg-light mx-auto rounded"
-				style={{ width: "450px" }}>
-				<div className="mb-3 w-50 pb-2 mx-auto mt-4">
-					<Header />
-					<AddTask />
+		<div className="container ">
+			<div className="mx-auto mb-3 w-25">
+				<label htmlFor="exampleInputEmail1">
+					<h2>To Do</h2>
+				</label>
+				<div className="d-flex">
+					<input
+						type="text"
+						className="form-control"
+						id="inputTask"
+						aria-describedby="emailHelp"
+						placeholder="enter task"
+						value={input}
+						onChange={(e) => {
+							setInput(e.target.value);
+						}}
+					/>
+					<button
+						type="button"
+						className="btn btn-light"
+						onClick={() => {
+							setList([...list, input]);
+							setInput("");
+						}}>
+						Submit
+					</button>
 				</div>
+			</div>
+			{list.map((e, i) => {
+				return (
+					<div key={i} className="row task mx-auto w-25 border">
+						<div className="col-10">{e}</div>
+						<div
+							className="col-2"
+							onMouseEnter={() => setHoverOn(i)}
+							onMouseLeave={() => setHoverOn(null)}>
+							{hoverOn == i && (
+								<button
+									className="bg-transparent border-0"
+									type="button"
+									onClick={(i) => {
+										list.splice(i, 1);
+									}}>
+									X
+								</button>
+							)}
+						</div>
+					</div>
+				);
+			})}
+			<div className="mx-auto mb-3 w-25 border bg-light counter">
+				{list.length > 0
+					? list.length + " items"
+					: "No tasks, add a task"}
 			</div>
 		</div>
 	);
